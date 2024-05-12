@@ -4,7 +4,7 @@
 
 I created this program primarily to learn and practice the Rust programming language and introduce myself to cryptography along the way.
 
-{Provide a link to your YouTube demonstration. It should be a 4-5 minute demo of the software running and a walkthrough of the code. Focus should be on sharing what you learned about the language syntax.}
+[Youtube demo](https://youtu.be/g1f6ECsrAAY)
 
 ### Program Usage:
 Use caution when using software that modifies files on your computer. Use this software at your own risk. I have mostly tested it with text files but other file types can be used.

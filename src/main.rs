@@ -31,7 +31,7 @@ fn main() -> std::io::Result<()> {
             "0" => (),
             "1" => encrypt_input()?,
             "2" => decrypt_input()?,
-            _ => println!("Invalid option, select again"),
+            _   => println!("Invalid option, select again"),
         }
     }
     Ok(())
@@ -57,7 +57,7 @@ fn encrypt_input() -> std::io::Result<()> {
     println!("Enter the file to encrypt:");
     let mut file_in_name = String::new();
     io::stdin().read_line(&mut file_in_name)?;
-    let file_in = File::open(file_in_name.trim()).expect("Couldn't open file. Make sure path exists");// TODO return to mutable if needed
+    let file_in = File::open(file_in_name.trim()).expect("Couldn't open file. Make sure path exists");
 
     println!("Enter file to save encryption:");
     let mut file_out_name = String::new();
@@ -68,12 +68,12 @@ fn encrypt_input() -> std::io::Result<()> {
         }
         println!(
             "Using the same file here will cause serious data loss\n\
-                  Enter a different name:"
+             Enter a different name:"
         );
         file_out_name.clear();
         io::stdin().read_line(&mut file_out_name)?;
     }
-    let file_out = File::create(file_out_name.trim()).expect("Failed to create file");// TODO return to mutable if needed
+    let file_out = File::create(file_out_name.trim()).expect("Failed to create file");
 
     println!(
         "Enter the 16 character key you will use to encrypt and decrypt your file\n\
@@ -92,7 +92,7 @@ fn encrypt_input() -> std::io::Result<()> {
         key_string.clear();
         io::stdin().read_line(&mut key_string)?;
     }   
-    let key: &[u8] = key_string.trim().as_bytes();// TODO return to mutable if needed
+    let key: &[u8] = key_string.trim().as_bytes();
     encrypt_file(file_in, file_out, key)?;
     println!("{} was encrypted to {}", file_in_name.trim(), file_out_name);
     Ok(())
@@ -104,7 +104,7 @@ fn decrypt_input() -> std::io::Result<()> {
     println!("Enter the file to decrypt:");
     let mut file_in_name = String::new();
     io::stdin().read_line(&mut file_in_name)?;
-    let file_in = File::open(file_in_name.trim()).expect("Couldn't open file. make sure path exists");// TODO return to mutable if needed
+    let file_in = File::open(file_in_name.trim()).expect("Couldn't open file. make sure path exists");
 
     println!("Enter file to save decryption:");
     let mut file_out_name = String::new();
@@ -120,7 +120,7 @@ fn decrypt_input() -> std::io::Result<()> {
         file_out_name.clear();
         io::stdin().read_line(&mut file_out_name)?;
     }
-    let file_out = File::create(file_out_name.trim()).expect("failed to create file");// TODO return to mutable if needed
+    let file_out = File::create(file_out_name.trim()).expect("failed to create file");
 
     println!(
         "Enter the 16 character key you used to encrypt this file\n"
@@ -138,7 +138,7 @@ fn decrypt_input() -> std::io::Result<()> {
         key_string.clear();
         io::stdin().read_line(&mut key_string)?;
     }
-    let key: &[u8] = key_string.trim().as_bytes();// TODO return to mutable if needed
+    let key: &[u8] = key_string.trim().as_bytes();
     decrypt_file(file_in, file_out, key)?;
     println!("{} was decrypted to {}", file_in_name.trim(), file_out_name);
     Ok(())
@@ -162,7 +162,8 @@ fn encrypt_file(mut file_in: File, mut file_out: File, key: &[u8]) -> std::io::R
         if bytes_read == 0 {
             break; // exit loop
         }
-        // TODO replace any string conversions with byte padding function
+
+        // Place buffer in a byte slice. Padd slice if less than 16 read ie at the end of a file
         let data = if bytes_read < BLOCK_SIZE {
             u8_slice_padder(&mut buffer[..], BLOCK_SIZE - bytes_read)
         } else {
@@ -210,6 +211,7 @@ fn decrypt_file(mut file_in: File, mut file_out: File, key: &[u8]) -> std::io::R
     Ok(())
 }
 
+/* padds a byte slice less than 16 bytes with utf8 code for space character and returns it. */
 fn u8_slice_padder(bytery: &mut [u8], difference: usize) -> &[u8] {
     let index_start = bytery.len() - difference; // Start at first unfilled index
     for i in 0..difference { // replace at each index to the last
