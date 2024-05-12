@@ -1,0 +1,7 @@
+[package]
+name = "encryption_proj"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rust-crypto = "0.2.36"
